@@ -1,5 +1,5 @@
 require('dotenv').config()
-var dnaStatModel = require('./models/DnaStatModel');
+require('./models/DnaStatModel');
 
 import app from "./app";
 
