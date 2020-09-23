@@ -1,6 +1,6 @@
 # dna-mutation
 
-dna-mutation is a service that process a DNA and determines if it has mutated or not. The project also offers some historical statistics.
+dna-mutation is a service that processes a DNA and determines if it has mutated or not. The project also offers some historical statistics.
 
 It's a REST API developed in node.js with typescript.
 It works with a NoSQL Database (MongoDB) by using mongoose library. 
