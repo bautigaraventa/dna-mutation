@@ -7,6 +7,7 @@ It works with a NoSQL Database (MongoDB) by using mongoose library.
 
 
 # To start the project
+    - make sure you have mongoDB installed on your machine
     - npm install
     - set .env file (see section below)
     - npm run dev
@@ -69,3 +70,14 @@ This endpoint returns historical data:
           }
     - error:
         - { status: 500, error }
+
+# Thinking big
+There are many things that can be added to this project if we think about a production environment:
+
+To let the system support high volume of users, we should think about a cloud hosting service (like AWS EC2) that allows to easily scale up the infrastructure, but we may still consume from an unique origin of data (we may use MongoDB Atlas).
+
+After that, I would develop some sort of authentication to allow only defined users to access our services. We could implement the standard openId with a clientId and clientSecret.
+
+If the service grows, it would be great to document the REST API in a standard format like Swagger, to make it more accessible.
+
+We could also think on adding more functionalities. At least to complete the CRUD operations or manage stats with dates or different parameters.

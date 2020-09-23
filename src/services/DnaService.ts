@@ -24,7 +24,7 @@ export class DnaService {
     }
 
     /**
-     * 
+     * Recursive function to check each possibility of dna mutation
      * @param dna Array of strings representing the dna to check
      * @param rowPosition The dna row position to process
      * @param columnPosition The dna column position to process
@@ -51,7 +51,7 @@ export class DnaService {
     }
 
     /**
-     * 
+     * Return DNA possible secuences from a specific position
      * @param dna Array of strings representing the dna to check
      * @param rowPosition The dna row position to process
      * @param columnPosition The dna column position to process
