@@ -1,5 +1,11 @@
 import { dnaRepository } from "../repository/DnaRepository";
 
+interface Stats {
+    count_mutations: number,
+    count_no_mutations: number,
+    ratio: number,
+}
+
 /**
  * DNA Service to manage extra functionalities
  */
@@ -13,7 +19,7 @@ export class DnaService {
      */
     public hasMutation = async (dna: string[]): Promise<boolean> => {
         try {
-            const hasMutation: boolean = this.checkDnaMutation(dna, 0, 0, 0);
+            const hasMutation: boolean = this.checkDnaMutation(dna);
 
             await dnaRepository.create({ dna, hasMutation });
 
@@ -30,7 +36,7 @@ export class DnaService {
      * @param columnPosition The dna column position to process
      * @param mutatedSecuences Number of mutated secuences
      */
-    private checkDnaMutation = (dna: string[], rowPosition: number, columnPosition: number, mutatedSecuences: number): boolean => {
+    private checkDnaMutation = (dna: string[], rowPosition = 0, columnPosition = 0, mutatedSecuences = 0): boolean => {
         const secuences: string[] = this.getSecuencesToCheck(dna, rowPosition, columnPosition)
 
         const filteredSecuences = secuences.filter((s) => Array.from(s).every((letter) => letter === s[0]));
@@ -93,11 +99,7 @@ export class DnaService {
     /**
      * Returns the dna statistics with historical data
      */
-    public stats = async (): Promise<{
-        count_mutations: number,
-        count_no_mutations: number,
-        ratio: number,
-    }> => {
+    public stats = async (): Promise<Stats> => {
         try {
             const dnaStats = await dnaRepository.getAll();
 

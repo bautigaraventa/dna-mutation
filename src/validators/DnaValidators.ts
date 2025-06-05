@@ -4,7 +4,14 @@ export class DnaValidator {
 
     public mutation = celebrate({
         body: Joi.object().keys({
-            dna: Joi.array().items(Joi.string().regex(/^[A/T/C/G/a/t/c/g]+$/)).required(),
+            dna: Joi.array()
+            .min(4)
+            .items(
+              Joi.string()
+                .min(4)
+                .pattern(/^[ATCG]+$/i)
+            )
+            .required()
         }),
     });
 

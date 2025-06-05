@@ -1,83 +1,164 @@
 # dna-mutation
 
-dna-mutation is a service that processes a DNA and determines if it has mutated or not. The project also offers some historical statistics.
+## 🧬 Overview
 
-It's a REST API developed in node.js with typescript.
-It works with a NoSQL Database (MongoDB) by using mongoose library. 
+**dna-mutation** is a RESTful API service that analyzes DNA sequences to detect specific types of mutations. It also tracks and reports statistics about the DNA samples processed. The project is built using **Node.js**, **TypeScript**, **Express**, and **MongoDB** (via **Mongoose**).
 
+The main purpose of this project, was to create a quick REST API with these technologies and handle some logic with NxN data structures.
 
-# To start the project
-    - make sure you have mongoDB installed on your machine
-    - npm install
-    - set .env file (see section below)
-    - npm run dev
-    - the application will start running on http://localhost:[PORT]
+---
 
+## 🚀 Features
 
-# .env example
-    - PORT=3000 => the port where our server will listen to requests
+- **Mutation Detection**
+  Analyzes NxN DNA matrices to detect mutations based on repeated character sequences.
 
-# Tests
-As a testing library we use jest (https://jestjs.io/):
+- **Statistics**
+  Tracks and reports counts and ratios of mutated vs non-mutated DNA sequences.
 
-    - npm test
+- **Persistence**
+  Stores each analyzed sequence and result in a MongoDB database.
 
-# Services
-This project offers 2 public services (endpoints) to be consumed:
+---
 
-## POST - [serverUrl]/mutation
-This endpoint determines if the dna is mutated or not.
-The result will be saved to the database for future stats.
+## ⚙️ How It Works
 
-### Input:
-    - body:
-        - dna: {String[]} The NxN DNA,
+### 1. Architecture
 
-    - example:
-        {
-            "dna": [
-                "ATGCGA",
-                "CAGTGC",
-                "TTATTT",
-                "AGACGG",
-                "GCGTCA",
-                "TCACTG"
-            ]
-        }
+- **Express.js** for the REST API framework
+- **TypeScript** for static typing
+- **MongoDB + Mongoose** for database modeling and persistence
+- **Jest** for unit testing
+- **Celebrate/Joi** for request validation
 
-### Output:
-    - successful:
-        - { status: 200 } => DNA has mutation
-        - { status: 403 } => DNA doesn't have mutation
-    - error: 
-        - { status: 500, error }
+### 2. Mutation Detection Algorithm
 
+- DNA is represented as an array of strings (NxN matrix)
+- Checks for 4 identical letters in the following directions:
+  - Horizontally (→)
+  - Vertically (↓)
+  - Diagonally (↘)
+  - Anti-diagonally (↙)
+- DNA is considered mutated if **at least two** such sequences are found.
 
-## GET - [serverUrl]/stats
-This endpoint returns historical data: 
+---
 
-    - Quantity of mutated dna processed.
-    - Quantity of not mutated dna processed.
-    - Ratio of mutation.
+## 📡 API Endpoints
 
-### Output:
-    - successful:
-        - { status: 200, {
-                "count_mutations": number,
-                "count_no_mutations": number,
-                "ratio": number
-            }
-          }
-    - error:
-        - { status: 500, error }
+### `POST /mutation`
 
-# Thinking big
-There are many things that can be added to this project if we think about a production environment:
+**Purpose:** Analyze a DNA sequence for mutation.
 
-To let the system support high volume of users, we should think about a cloud hosting service (like AWS EC2) that allows to easily scale up the infrastructure, but we may still consume from an unique origin of data (we may use MongoDB Atlas).
+**Request Body:**
 
-After that, I would develop some sort of authentication to allow only defined users to access our services. We could implement the standard openId with a clientId and clientSecret.
+```json
+{
+  "dna": ["ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"]
+}
+```
 
-If the service grows, it would be great to document the REST API in a standard format like Swagger, to make it more accessible.
+**Validations:**
 
-We could also think on adding more functionalities. At least to complete the CRUD operations or manage stats with dates or different parameters.
+- Must be a square NxN matrix where N >= 4
+- Only contains characters: A, T, C, G
+
+**Responses:**
+
+- `200 OK - { hasMutation: true/false }` – DNA has mutation based on true/false
+- `500 Internal Server Error` – Invalid input or server failure
+
+---
+
+### `GET /stats`
+
+**Purpose:** Get mutation statistics.
+
+**Response:**
+
+```json
+{
+  "count_mutations": 40,
+  "count_no_mutations": 100,
+  "ratio": 0.4
+}
+```
+
+- `200 OK` on success
+- `500 Internal Server Error` on failure
+
+---
+
+## 📁 Project Structure
+
+Key components:
+
+- `routes/DnaRoutes.ts` – Routes for `/mutation` and `/stats`
+- `controllers/` – Mutation logic and stats handling
+- `models/` – MongoDB schema definition
+- `tests/` – Jest-based unit tests
+- `middleware/` – Validation and error handling
+
+---
+
+## 🛠️ Tech Stack
+
+- **Node.js + TypeScript** – Scalable and maintainable server logic
+- **Express** – Routing and middleware support
+- **Mongoose** – MongoDB object modeling
+- **Celebrate/Joi** – Request validation
+- **Jest** – Testing framework
+- **dotenv** – Environment variable configuration
+- **Nodemon** – Dev-time server reloading
+
+---
+
+## 🔧 Setup & Usage
+
+### ✅ Prerequisites
+
+- Node.js (v12+)
+- npm
+- MongoDB (local or MongoDB Atlas)
+
+### 📦 Installation
+
+```bash
+git clone git@github.com:<your-username>/dna-mutation.git
+cd dna-mutation
+npm install
+```
+
+Create a `.env` file in the root directory:
+
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/dna-mutation
+```
+
+---
+
+### ▶️ Running the Application
+
+```bash
+npm run dev
+```
+
+Server starts at: `http://localhost:3000`
+
+---
+
+### 🧪 Running Tests
+
+```bash
+npm run test
+```
+
+---
+
+## 📈 Extensibility & Future Improvements
+
+- 🔐 **Authentication:** Add OAuth2/OpenID for secure access
+- 📚 **API Docs:** Integrate Swagger/OpenAPI
+- ☁️ **Cloud Hosting:** Deploy to AWS EC2 or similar
+- 📊 **Advanced Stats:** Filtering, date range, detailed analytics
+- ✍️ **CRUD Support:** Update/delete stored DNA entries

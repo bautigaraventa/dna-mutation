@@ -15,8 +15,8 @@ export class DnaController {
      */
     public mutation = async (req: Request, res: Response) => {
         try {
-            const result = await dnaService.hasMutation(req.body.dna);
-            result ? res.status(200).send() : res.status(403).send();
+            const hasMutation = await dnaService.hasMutation(req.body.dna);
+            res.status(200).send({ hasMutation })
         } catch (error) {
             res.status(500).send({
                 error: error.message,
@@ -31,8 +31,8 @@ export class DnaController {
      */
     public stats = async (req: Request, res: Response) => {
         try {
-            const result = await dnaService.stats();
-            res.status(200).send(result);
+            const stats = await dnaService.stats();
+            res.status(200).send(stats);
         } catch (error) {
             res.status(500).send({
                 error: error.message,

@@ -14,7 +14,7 @@ class App {
 
     private config(): void {
         // Database
-        mongoose.connect('mongodb://localhost:27017/dna-mutation', { useNewUrlParser: true });
+        mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
         // support application/json
         this.app.use(bodyParser.json());
